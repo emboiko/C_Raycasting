@@ -14,7 +14,7 @@ int ticksLastFrame;
 
 uint32_t* colorBuffer = NULL;
 SDL_Texture* colorBufferTexture;
-// uint32_t* wallTexture = NULL; //For custom blue/black-grid texture
+//uint32_t* wallTexture = NULL; //For custom blue/black-grid texture
 
 uint32_t* textures[NUM_TEX];
 
@@ -39,8 +39,8 @@ struct Player {
     float y;
     float width;
     float height;
-    int turnDirection; // -1 for left, +1 for right
-    int walkDirection; // -1 for back, +1 for forward
+    int turnDirection; //-1 for left, +1 for right
+    int walkDirection; //-1 for back, +1 for forward
     int strafeDirection;
     float rotationAngle;
     float walkSpeed;
@@ -68,7 +68,7 @@ int wInit() {
         return FALSE;
     }
 
-    // No title, Xpos, wWidth, wHeight, [no-border] 
+    //No title, Xpos, wWidth, wHeight, [no-border] 
     window = SDL_CreateWindow(
         NULL,
         SDL_WINDOWPOS_CENTERED,
@@ -83,7 +83,7 @@ int wInit() {
         return FALSE;
     }
 
-    // use window, default driver, no flags
+    //use window, default driver, no flags
     renderer = SDL_CreateRenderer(
         window,
         -1,
@@ -95,7 +95,7 @@ int wInit() {
         return FALSE;
     }
 
-    // texture mode
+    //texture mode
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     //If we make it this far, it would seem our window initialized correctly
@@ -136,12 +136,12 @@ void setup() {
     );
 
     //Create a texture with a pattern of blue & black lines
-    // wallTexture = (uint32_t *)malloc(sizeof(uint32_t) * (uint32_t)TEX_WIDTH * (uint32_t)TEX_HEIGHT);
-    // for (int x = 0; x < TEX_WIDTH; x++){
-    //     for (int y = 0; y < TEX_HEIGHT; y++) {
-    //         wallTexture[(TEX_WIDTH * y) + x] = ((x % 8) && (y % 8)) ? 0xFF0000FF : 0xFF000000;
-    //     }
-    // }
+    //wallTexture = (uint32_t *)malloc(sizeof(uint32_t) * (uint32_t)TEX_WIDTH * (uint32_t)TEX_HEIGHT);
+    //for (int x = 0; x < TEX_WIDTH; x++){
+    //    for (int y = 0; y < TEX_HEIGHT; y++) {
+    //        wallTexture[(TEX_WIDTH * y) + x] = ((x % 8) && (y % 8)) ? 0xFF0000FF : 0xFF000000;
+    //    }
+    //}
 
     //load textures from textures.h
     textures[0] = (uint32_t *)REDBRICK_TEXTURE;
@@ -451,6 +451,7 @@ void processInput() {
             case SDL_KEYDOWN: {
                 if (event.key.keysym.sym == SDLK_ESCAPE) 
                     running = FALSE;
+
                 if (event.key.keysym.sym == SDLK_UP) 
                     player.walkDirection = 1;
                 if (event.key.keysym.sym == SDLK_w) 
@@ -467,6 +468,7 @@ void processInput() {
                     player.turnDirection = -1;
                 if (event.key.keysym.sym == SDLK_a) 
                     player.turnDirection = -1;
+
                 if (event.key.keysym.sym == SDLK_e)
                     player.strafeDirection = 1;
                 if (event.key.keysym.sym == SDLK_q) 
@@ -492,6 +494,7 @@ void processInput() {
                     player.turnDirection = 0;
                 if (event.key.keysym.sym == SDLK_a)
                     player.turnDirection = 0;
+                    
                 if (event.key.keysym.sym == SDLK_e)
                     player.strafeDirection = 0;
                 if (event.key.keysym.sym == SDLK_q)
@@ -506,21 +509,21 @@ void processInput() {
 }
 
 void update() {
-    // Waste some time until we reach the target frametime:
-    // Naive solution:
-    // while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + FRAME_TIME));
+    //Waste some time until we reach the target frametime:
+    //Naive solution:
+    //while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + FRAME_TIME));
     
-    // Better solution:
-    // Computer how long until we reach the target frametime in ms
+    //Better solution:
+    //Compute how long until we reach the target frametime in ms
     int wait = FRAME_TIME - (SDL_GetTicks() - ticksLastFrame);
-    // Only delay if we're going too fast
+    //Only delay if we're going too fast
     if (wait > 0 && wait <= FRAME_TIME) {
         SDL_Delay(wait);
     }
 
-    // Decouple object movement from framerate:
-    // Delta time: Pixels per frame => pixels per second
-    // Difference in ticks from last frame converted to seconds
+    //Decouple object movement from framerate:
+    //Delta time: Pixels per frame => pixels per second
+    //Difference in ticks from last frame converted to seconds
     float deltaTime = (SDL_GetTicks() - ticksLastFrame) / 1000.0f;
     ticksLastFrame = SDL_GetTicks();
 
@@ -549,7 +552,7 @@ void generateProjection() {
             colorBuffer[(WINDOW_WIDTH * y) + i] = 0xFF333333;
         }
 
-        // Calculate texture offset X
+        //Calculate texture offset X
         int textureOffsetX;
         if (rays[i].wasHitVertical) {
             //perform offset for vertical hit
@@ -567,7 +570,7 @@ void generateProjection() {
             int distanceTop = y + (wallStripHeight / 2) - (WINDOW_HEIGHT / 2);
             int textureOffsetY = distanceTop * ((float)TEX_HEIGHT / wallStripHeight);
 
-            // set the color of the wall based on the color from the texture in memory
+            //set the color of the wall based on the color from the texture in memory
             uint32_t texturePixelColor = textures[texNum][(TEX_WIDTH * textureOffsetY) + textureOffsetX];
             colorBuffer[(WINDOW_WIDTH * y) + i] = texturePixelColor;
         }
